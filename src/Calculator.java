@@ -2,11 +2,11 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import java.util.ArrayList;
 
 public class Calculator extends Application implements EventHandler<ActionEvent> {
@@ -28,10 +28,11 @@ public class Calculator extends Application implements EventHandler<ActionEvent>
     Button buttonMultiply;
     Button buttonCalc;
     Button buttonClear;
+    Button buttonPoint;
 
     //skapar 2 textareas
-    public static TextArea textArea = new TextArea();
-    public static TextArea textOutput = new TextArea();
+    public static TextField textArea = new TextField();
+    public static TextField textOutput = new TextField();
 
 
     public static void main(String[] args) {
@@ -41,6 +42,11 @@ public class Calculator extends Application implements EventHandler<ActionEvent>
     @Override
     public void start(Stage primaryStage) {
 
+        //Gör så att man inte kan skriva in via tangentbordet
+        textArea.setDisable(true);
+        textOutput.setDisable(true);
+
+        textArea.setMinSize(100, 50);
         //Skapar knappar och ger dem en storlek och action. Delar även ut position i GridPane.
         button1 = new Button("1");
         button1.setOnAction(this);
@@ -137,12 +143,16 @@ public class Calculator extends Application implements EventHandler<ActionEvent>
         buttonClear.setMaxSize(50,50);
         GridPane.setConstraints(buttonClear,4,0);
 
+        buttonPoint = new Button (".");
+        buttonPoint.setOnAction(this);
+        buttonPoint.setMinSize(50,50);
+        buttonPoint.setMaxSize(50,50);
+        GridPane.setConstraints(buttonPoint,2,3);
+
         //Initierar BorderPane och GridPane
         BorderPane root = new BorderPane();
 
         GridPane grid = new GridPane();
-
-        grid.setTranslateX(150);
 
         //Gör så att alla knappar visas i grid.
         grid.getChildren().add(button1);
@@ -161,6 +171,7 @@ public class Calculator extends Application implements EventHandler<ActionEvent>
         grid.getChildren().add(buttonMultiply);
         grid.getChildren().add(buttonCalc);
         grid.getChildren().add(buttonClear);
+        grid.getChildren().add(buttonPoint);
 
         //Sätter ut platser i BorderPane
         root.setCenter(grid);
@@ -211,11 +222,12 @@ public class Calculator extends Application implements EventHandler<ActionEvent>
         } else if (event.getSource() == buttonClear){
             textArea.clear();
             textOutput.clear();
+        } else if (event.getSource() == buttonPoint){
+            textArea.appendText(".");
         }
     }
     //Tagen från genomgång med Joakim
     //metod för att räkna
-    //räknar inte decimaltal, "/" fungerar alltså inte perfekt
     public static void calc() {
 
         //eq = det som är inskrivet i textArea
@@ -231,7 +243,7 @@ public class Calculator extends Application implements EventHandler<ActionEvent>
 
         //Loopen kallar på metoden "isNumeric" vilket kollar om tecknet i arrayen är en siffra eller inte.
         for (int i = 0; i < arr.length; i++) {
-            if(isNumeric(arr[i])){
+            if(isNumeric(arr[i]) || arr[i].contains(".")){
                 number += arr[i];
             } else{
                 list.add(number);
@@ -243,31 +255,31 @@ public class Calculator extends Application implements EventHandler<ActionEvent>
 
         //Kollar vilken symbol man har använt. Räknar med samma räknesätt som är inskrivet.
         //räknar inte enligt prioriteringsreglerna
-        int tal1 = 0;
+        double tal1 = 0;
+
         for (int i = 0; i < list.size(); i++) {
 
             if(i%2 == 0){
-                tal1 = Integer.parseInt(list.get(i));
+                tal1 = Double.parseDouble(list.get(i));
             }
             else {
                 if(list.get(i).equals("+")){
-                    tal1 = tal1 + Integer.parseInt(list.get(i+1));
+                    tal1 = tal1 + Double.parseDouble(list.get(i+1));
                 }
                 if(list.get(i).equals("-")){
-                    tal1 = tal1 - Integer.parseInt(list.get(i+1));
+                    tal1 = tal1 - Double.parseDouble(list.get(i+1));
                 }
                 if(list.get(i).equals("*")){
-                    tal1 = tal1 * Integer.parseInt(list.get(i+1));
+                    tal1 = tal1 * Double.parseDouble(list.get(i+1));
                 }
                 if(list.get(i).equals("/")){
-                    tal1 = tal1 / Integer.parseInt(list.get(i+1));
+                    tal1 = tal1 / Double.parseDouble(list.get(i+1));
                 }
                 String result = String.valueOf(tal1);
                 textOutput.appendText(result);
             }
         }
     }
-
     //metod som kollar om ett tecken är numeriskt eller inte.
     private static boolean isNumeric(String s) {
         if ("1234567890".contains(s)){
