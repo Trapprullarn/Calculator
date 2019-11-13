@@ -30,7 +30,7 @@ public class Calculator extends Application implements EventHandler<ActionEvent>
     Button buttonClear;
     Button buttonPoint;
 
-    //skapar 2 textareas
+    //skapar 2 textFields
     public static TextField textArea = new TextField();
     public static TextField textOutput = new TextField();
 
