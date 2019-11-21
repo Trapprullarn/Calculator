@@ -254,28 +254,29 @@ public class Calculator extends Application implements EventHandler<ActionEvent>
         list.add(number);
 
         //Kollar vilken symbol man har använt. Räknar med samma räknesätt som är inskrivet.
+        //Output sker i textOutput
         //räknar inte enligt prioriteringsreglerna
-        double tal1 = 0;
+        double count = 0;
 
         for (int i = 0; i < list.size(); i++) {
 
             if(i%2 == 0){
-                tal1 = Double.parseDouble(list.get(i));
+                count = Double.parseDouble(list.get(i));
             }
             else {
                 if(list.get(i).equals("+")){
-                    tal1 = tal1 + Double.parseDouble(list.get(i+1));
+                    count = count + Double.parseDouble(list.get(i+1));
                 }
                 if(list.get(i).equals("-")){
-                    tal1 = tal1 - Double.parseDouble(list.get(i+1));
+                    count = count - Double.parseDouble(list.get(i+1));
                 }
                 if(list.get(i).equals("*")){
-                    tal1 = tal1 * Double.parseDouble(list.get(i+1));
+                    count = count * Double.parseDouble(list.get(i+1));
                 }
                 if(list.get(i).equals("/")){
-                    tal1 = tal1 / Double.parseDouble(list.get(i+1));
+                    count = count / Double.parseDouble(list.get(i+1));
                 }
-                String result = String.valueOf(tal1);
+                String result = String.valueOf(count);
                 textOutput.appendText(result);
             }
         }
